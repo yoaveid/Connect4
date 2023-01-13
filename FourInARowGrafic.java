@@ -16,13 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
-public class FourInARowGrafic implements ActionListener {
+public class FourInARowGraphic implements ActionListener {
 	
 	JFrame frame = new JFrame();
 	static JButton buttons [][] = new JButton[FourInARow.row][FourInARow.col];
-	JButton sumbitType = new JButton("Submit");
-	JButton sumbitLevel = new JButton("Submit");
-	JButton sumbitStart = new JButton("Submit");
+	JButton sumbitType = new JButton("Next");
+	JButton sumbitLevel = new JButton("Next");
+	JButton sumbitStart = new JButton("Next");
 	JPanel select_panel = new JPanel();
 	JPanel title_panel = new JPanel();
 	JPanel button_panel = new JPanel();
@@ -33,12 +33,12 @@ public class FourInARowGrafic implements ActionListener {
 	boolean type = true; // true - the game is against CPU , false - 2 player game
 	boolean whoStart = true; // true - the man/blue start , false - the CPU/the red start
 	FourInARow.States level;
-	
-	
-	public FourInARowGrafic() {
+	Color selectBackgroundColor = new Color(73,239,212);
+	Color selectForegroundColor = new Color(200,55,80);
+	public FourInARowGraphic() {
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-		frame.setSize(1000,800); // sets the size
+		frame.setSize(850,600); // sets the size
 		frame.getContentPane().setBackground(new Color(75,75,75));
 		frame.setLayout(new BorderLayout());
 		
@@ -51,24 +51,24 @@ public class FourInARowGrafic implements ActionListener {
 		text.setOpaque(true);
 		
 		Player1Game = new JRadioButton("player againts CPU");
-		Player1Game.setBackground(new Color(230,20,10));
-		Player1Game.setForeground(new Color(0,220,0));
+		Player1Game.setBackground(selectBackgroundColor);
+		Player1Game.setForeground(selectForegroundColor);
 		Player2Game = new JRadioButton("player againts player");
-		Player2Game.setBackground(new Color(230,20,10));
-		Player2Game.setForeground(new Color(0,220,0));
+		Player2Game.setBackground(selectBackgroundColor);
+		Player2Game.setForeground(selectForegroundColor);
 
 		hard = new JRadioButton("hard");
 		medium = new JRadioButton("medium");
 		easy = new JRadioButton("easy");
 		
-		hard.setBackground(new Color(230,20,10));
-		hard.setForeground(new Color(0,220,0));
+		hard.setBackground(selectBackgroundColor);
+		hard.setForeground(selectForegroundColor);
 		
-		medium.setBackground(new Color(230,20,10));
-		medium.setForeground(new Color(0,220,0));
+		medium.setBackground(selectBackgroundColor);
+		medium.setForeground(selectForegroundColor);
 		
-		easy.setBackground(new Color(230,20,10));
-		easy.setForeground(new Color(0,220,0));
+		easy.setBackground(selectBackgroundColor);
+		easy.setForeground(selectForegroundColor);
 		
 		typeGroup = new ButtonGroup();
 		chooseLevel = new ButtonGroup();
@@ -89,30 +89,27 @@ public class FourInARowGrafic implements ActionListener {
 		Player2Game.setFocusable(false);
 		Player2Game.addActionListener(this);
 		
-		sumbitType.setFont(new Font("fd",Font.BOLD,80));
+		sumbitType.setFont(new Font("fd",Font.BOLD,40));
 		sumbitType.setFocusable(false);
 		sumbitType.addActionListener(this);
 		
 		hard.setFont(new Font("fd",Font.BOLD,35));
 		hard.setFocusable(false);
-		hard.addActionListener(this);
 		
 		medium.setFont(new Font("fd",Font.BOLD,35));
 		medium.setFocusable(false);
-		medium.addActionListener(this);
 		
 		easy.setFont(new Font("fd",Font.BOLD,35));
 		easy.setFocusable(false);
-		easy.addActionListener(this);
 		
-		sumbitLevel.setFont(new Font("fd",Font.BOLD,35));
+		sumbitLevel.setFont(new Font("fd",Font.BOLD,40));
 		sumbitLevel.setFocusable(false);
 		sumbitLevel.addActionListener(this);
-		
-		sumbitStart.setFont(new Font("fd",Font.BOLD,35));
+
+		sumbitStart.setFont(new Font("fd",Font.BOLD,40));
 		sumbitStart.setFocusable(false);
 		sumbitStart.addActionListener(this);
-		
+
 		button_panel.setLayout(new GridLayout(buttons.length,buttons[0].length));
 		button_panel.setForeground(new Color(25,250,0));
 		for(int i = 0; i< buttons.length; i++)
@@ -129,12 +126,11 @@ public class FourInARowGrafic implements ActionListener {
 			}
 		
 		select_panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		select_panel.setBackground(new Color(230,20,10));
+		select_panel.setBackground(selectBackgroundColor);
 		select_panel.add(Player1Game);
 		select_panel.add(Player2Game);
 		select_panel.add(sumbitType);
 		frame.add(select_panel);
-	//	frame.add(button_panel);
 		title_panel.add(text);
 		frame.add(title_panel,BorderLayout.NORTH);
 		frame.setVisible(true); // make frame visible constructor stub
@@ -143,100 +139,15 @@ public class FourInARowGrafic implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == sumbitType)
-		{
-			if(!Player1Game.isSelected() && !Player2Game.isSelected())
-				return;
-			if(Player1Game.isSelected())
-				type = true;
-			else
-				type = false;
-			typeGroup.clearSelection();
-			levelSelection();
-		}
-		else if(e.getSource() == sumbitLevel)
-		{
-			if(hard.isSelected())
-				level = FourInARow.States.HARD;
-			else if(easy.isSelected())
-				level = FourInARow.States.EASY;
-			else
-				level = FourInARow.States.MEDIUM;
-			chooseLevel.clearSelection();
-			whoStart();
-		}
-		else if(e.getSource() == sumbitStart)
-		{
-			if(!Player1Game.isSelected() && !Player2Game.isSelected())
-				return;
-			if(Player1Game.isSelected())
-				whoStart = true;
-			else
-				whoStart = false;
-			Player1Game.setText("player againts CPU");
-			Player2Game.setText("player againts player");
-			typeGroup.clearSelection();		
-			startGame();
-		}
-		String color;
+		selectionsBeforeTheGame(e);
 		for(int i = 0; i< buttons.length; i++)
 			for(int j =0; j<  buttons[0].length; j++)
 			{
 				if(buttons[i][j] == e.getSource() && FourInARow.board[i][j] == null)
 				{
-					if(turn)
-					{
-						color = "b";
-						buttons[i][j].setBackground(Color.BLUE);
-
-					}
-					else
-					{
-						color = "r";
-						buttons[i][j].setBackground(Color.red);
-
-					}
-					FourInARow.board[i][j] = new Point(color);
-					if(i != 0)
-						FourInARow.avilabelPlaces[j]--;
-					if(i != 0)
-						buttons[i-1][j].addActionListener(this);
-					FourInARow.States whoWon = FourInARow.isWin(turn,FourInARow.States.REAL);
-					if(whoWon != FourInARow.States.NOONEWON)
-					{
-						if(whoWon == FourInARow.States.BLUEWON)
-							text.setText("The Blue wins");
-						else if(whoWon == FourInARow.States.REDWON)
-							text.setText("The Red wins");
-						else
-							text.setText("This ia a tie, good game");
-						String[] options = { "Yes", "No,start over", "exit"};
-						int answer = JOptionPane.showOptionDialog(null, "Do you want to play again? same option?", "restart",
-								JOptionPane.NO_OPTION,JOptionPane.DEFAULT_OPTION, null, options, 0);
-						if(answer == 2 || answer == -1)
-							System.exit(0);
-						else if(answer == 0)
-						{
-							intalizedGame();
-						}
-						else if(answer == 1)
-							intalized();
-						return;
-					}
-					turn = !turn;
-					if((turn == false) && type)
-					{
-						text.setText("Ammmm let me think....");
-						text.repaint();
-						text.validate();
-						title_panel.repaint();
-						title_panel.validate();
-			
-						int temp = FourInARow.getCPUPlace(level,turn);
-						e.setSource(buttons[FourInARow.avilabelPlaces[temp]][temp]);
-						i = 0;
-						j = -1;
-					}
+					playAMove(i,j);
+					if((turn == false) && type) // This is computer turn
+						playForCpu();
 					if(turn)
 						text.setText("This Blue turn");
 					else
@@ -244,11 +155,118 @@ public class FourInARowGrafic implements ActionListener {
 				}
 			}
 	}
+	private void playAMove(int i, int j) {
+		String color = colorBoard(buttons[i][j]);
+		updateBoardGame(i,j,color);
+		if( checkIfSomeoneWon()) // the game end
+			return;
+		turn = !turn;		
+	}
+
+	private void playForCpu() {
+		int move = FourInARow.getCPUPlace(level,turn);
+		int i = FourInARow.avaliablePlaces[move];
+		int j = move;
+		playAMove(i,j);
+	}
+
+	private boolean checkIfSomeoneWon() {
+		FourInARow.States whoWon = FourInARow.isWin(turn,FourInARow.States.REAL);
+		if(whoWon == FourInARow.States.NOONEWON)
+			return false;
+		if(whoWon == FourInARow.States.BLUEWON)
+			text.setText("The Blue wins");
+		else if(whoWon == FourInARow.States.REDWON)
+			text.setText("The Red wins");
+		else
+			text.setText("This ia a tie");
+		String[] options = { "Yes", "No,start over", "exit"};
+		int answer = JOptionPane.showOptionDialog(null, "Do you want to play again? same option?", "restart",
+		JOptionPane.NO_OPTION,JOptionPane.DEFAULT_OPTION, null, options, 0);
+		if(answer == 2 || answer == -1)
+			System.exit(0);
+		else if(answer == 0) 
+			intalizedGame();
+		else if(answer == 1)
+			intalized();
+		return true;
+	}		
+	
+
+	private void selectionsBeforeTheGame(ActionEvent e) {
+		if(e.getSource() == sumbitType)
+		{
+			if(!Player1Game.isSelected() && !Player2Game.isSelected())
+				return;
+			else
+				updateTypeOfGame();
+		}
+		else if(e.getSource() == sumbitLevel)
+		{
+			updateLevelGame();
+		}
+		else if(e.getSource() == sumbitStart)
+		{
+			updateWhoStart();
+			startGame();
+		}		
+	}
+
+	private void updateBoardGame(int i, int j, String color) {
+		FourInARow.board[i][j] = new Point(color);
+		if(i != 0)
+			FourInARow.avaliablePlaces[j]--;
+		if(i != 0)
+			buttons[i-1][j].addActionListener(this);		
+	}
+
+	private String colorBoard(JButton jButton) {
+		if(turn)
+		{
+			jButton.setBackground(Color.BLUE);
+			return "b";
+		}
+		else
+		{
+			jButton.setBackground(Color.RED);
+			return "r";
+		}
+	}
+
+	private void updateWhoStart() {
+		if(!Player1Game.isSelected() && !Player2Game.isSelected())
+			return;
+		if(Player1Game.isSelected())
+			whoStart = true;
+		else
+			whoStart = false;
+		typeGroup.clearSelection();				
+	}
+
+	private void updateLevelGame() {
+		if(hard.isSelected())
+			level = FourInARow.States.HARD;
+		else if(easy.isSelected())
+			level = FourInARow.States.EASY;
+		else
+			level = FourInARow.States.MEDIUM;
+		chooseLevel.clearSelection();
+		whoStart();		
+	}
+
+	private void updateTypeOfGame() {
+		if(Player1Game.isSelected())
+			type = true;
+		else
+			type = false;
+		typeGroup.clearSelection();
+		levelSelection();		
+	}
+
 	private void intalized() {
 		for(int i = 0; i< buttons.length; i++)
 			for(int j =0; j<  buttons[0].length; j++)
 			{
-				
 				if(i != FourInARow.row-1)
 					buttons[i][j].removeActionListener(this);
 				buttons[i][j].setBackground(Color.getColor("submit"));
@@ -256,9 +274,9 @@ public class FourInARowGrafic implements ActionListener {
 				FourInARow.board[i][j] = null;
 			}	
 		for(int i =0; i< FourInARow.col; i ++)
-			FourInARow.avilabelPlaces[i] = FourInARow.row-1;
+			FourInARow.avaliablePlaces[i] = FourInARow.row-1;
 		frame.remove(button_panel);
-		text.setText("Connect 4");
+		text.setText("Four In A Row");
 		select_panel.remove(sumbitStart);
 		select_panel.add(Player1Game);
 		select_panel.add(Player2Game);
@@ -266,7 +284,8 @@ public class FourInARowGrafic implements ActionListener {
 		frame.add(select_panel);
 		frame.repaint();
 		frame.validate();
-			
+		Player1Game.setText("player againts CPU");
+		Player2Game.setText("player againts player");	
 	}
 
 	private void intalizedGame() {
@@ -281,16 +300,17 @@ public class FourInARowGrafic implements ActionListener {
 				FourInARow.board[i][j] = null;
 			}
 		for(int i =0; i< FourInARow.col; i ++)
-			FourInARow.avilabelPlaces[i] = FourInARow.row-1;
+			FourInARow.avaliablePlaces[i] = FourInARow.row-1;
 		turn = whoStart;
 		if(whoStart == false)
 		{
 			buttons[FourInARow.row-1][FourInARow.col/2].setBackground(Color.red);
-			FourInARow.avilabelPlaces[FourInARow.col/2]--;
+			FourInARow.avaliablePlaces[FourInARow.col/2]--;
 			FourInARow.board[FourInARow.row -1][FourInARow.col/2] = new Point("r");
 			buttons[FourInARow.row-2][FourInARow.col/2].addActionListener(this);
 			turn = true;
 		}
+
 	}
 	
 
@@ -344,7 +364,7 @@ public class FourInARowGrafic implements ActionListener {
 			if(whoStart == false)
 			{
 				buttons[FourInARow.row-1][FourInARow.col/2].setBackground(Color.red);
-				FourInARow.avilabelPlaces[FourInARow.col/2]--;
+				FourInARow.avaliablePlaces[FourInARow.col/2]--;
 				FourInARow.board[FourInARow.row -1][FourInARow.col/2] = new Point("r");
 				buttons[FourInARow.row-2][FourInARow.col/2].addActionListener(this);
 				turn = true;
