@@ -4,32 +4,25 @@ import java.util.Random;
 
 
 public class FourInARow {
-	final static int row = 10;
-	final static int col = 10;
+	final static int row = 8;
+	final static int col = 8;
 	static Random rand = new Random();
 	static Point board[][] = new Point[row][col];
-	static int avilabelPlaces[] = new int [col];
+	static int avaliablePlaces[] = new int [col];
 	public enum States{
-		BLUEWON , REDWON ,  NOONEWON ,Tie, HARD , MEDIUM , EASY ,  BLUE , RED , DEMO ,REAL
+		BLUEWON , REDWON , NOONEWON ,TIE, HARD , MEDIUM , EASY ,  BLUE , RED , DEMO ,REAL
 	}
 	public static void main(String[] args) {
 	initializeBard();
-		new FourInARowGrafic();
+		new FourInARowGraphic();
 	}
 	public static void initializeBard() {
 		for(int i =0; i< col; i ++)
-			avilabelPlaces[i] = row-1;
+			avaliablePlaces[i] = row-1;
 	}
 	public static States isWin(boolean turn, States state) {
-		int x;
-		for( x = 0 ; x< col; x++)
-		{
-			if(board[0][x] == null)
-				break;
-		}
-		if( x == board[0].length)
-			return States.Tie;
-		String color;
+
+		String color = "rrrr";
 		String result = "";
 		States conditon = States.REDWON;
 		if(turn)
@@ -37,8 +30,7 @@ public class FourInARow {
 			color = "bbbb";
 			conditon = States.BLUEWON;
 		}
-		else
-			color = "rrrr";
+		
 		for(int i = row -1; i >=0; i-- ) // find if there 4 in a row
 		{
 			for(int j = 0 ; j < col ; j++)
@@ -53,11 +45,9 @@ public class FourInARow {
 			{
 				if(state == States.REAL)  markWinner(i,result.indexOf(color),1);
 				return conditon;
-			}
-			result = "";	
-
-					
+			}	
 		}
+		result = "";
 		for(int j = 0; j < col; j++ ) // find if there 4 in a col
 		{
 			for(int i = 0 ; i   < row ; i++)
@@ -71,7 +61,7 @@ public class FourInARow {
 			if( result.indexOf(color)!= -1)
 			{
 				if(state == States.REAL) markWinner(result.indexOf(color),j,2);
-				return conditon;
+					return conditon;
 
 			}
 			result = "";	
@@ -116,6 +106,14 @@ public class FourInARow {
 				}
 					
 		}
+		int x;
+		for( x = 0 ; x< col; x++)
+		{
+			if(board[0][x] == null)
+				break;
+		}
+		if( x == board[0].length) //if all the fields in the top row are full
+			return States.TIE;
 		return States.NOONEWON;
 	}
 	
@@ -129,18 +127,18 @@ public class FourInARow {
 		int depth = 8;
 		if(level == States.MEDIUM)
 			depth = 4;
-		for(int i =0; i< avilabelPlaces.length; i++)
+		for(int i =0; i< avaliablePlaces.length; i++)
 		{
-			if(board[avilabelPlaces[i]][i] == null)		
+			if(board[avaliablePlaces[i]][i] == null)		
 			{
 				if(turn)
-					board[avilabelPlaces[i]][i] = new Point("b");
+					board[avaliablePlaces[i]][i] = new Point("b");
 				else
-					board[avilabelPlaces[i]][i] = new Point("r");
-				if(avilabelPlaces[i] != 0) avilabelPlaces[i]--;
+					board[avaliablePlaces[i]][i] = new Point("r");
+				if(avaliablePlaces[i] != 0) avaliablePlaces[i]--;
 				int score = miniMax(depth, false, Integer.MIN_VALUE, Integer.MAX_VALUE, (!turn));
-				if(avilabelPlaces[i] != 0 || board[avilabelPlaces[i]][i] == null) avilabelPlaces[i]++;
-				board[avilabelPlaces[i]][i] = null;
+				if(avaliablePlaces[i] != 0 || board[avaliablePlaces[i]][i] == null) avaliablePlaces[i]++;
+				board[avaliablePlaces[i]][i] = null;
 				if(score > bestScore) {
 					
 					bestScore = score;
@@ -177,19 +175,19 @@ public class FourInARow {
 		if(CPU)
 		{
 			int bestScore = Integer.MIN_VALUE;
-			for(int i =0; i< avilabelPlaces.length; i++)
+			for(int i =0; i< avaliablePlaces.length; i++)
 			{
-				if(board[avilabelPlaces[i]][i] == null)
+				if(board[avaliablePlaces[i]][i] == null)
 				{
 					if(turn)
-						board[avilabelPlaces[i]][i] = new Point("b");
+						board[avaliablePlaces[i]][i] = new Point("b");
 					else
-						board[avilabelPlaces[i]][i] = new Point("r");
-					if(avilabelPlaces[i] != 0)
-						avilabelPlaces[i]--;
+						board[avaliablePlaces[i]][i] = new Point("r");
+					if(avaliablePlaces[i] != 0)
+						avaliablePlaces[i]--;
 					int score = miniMax(depth-1 , false, alpha, beta, (!turn));
-					if(avilabelPlaces[i] != 0 || board[avilabelPlaces[i]][i] == null) avilabelPlaces[i]++;
-					board[avilabelPlaces[i]][i] = null;
+					if(avaliablePlaces[i] != 0 || board[avaliablePlaces[i]][i] == null) avaliablePlaces[i]++;
+					board[avaliablePlaces[i]][i] = null;
 					alpha = Math.max(alpha, score);
 					bestScore = Math.max(score, bestScore);
 					if(beta <= alpha)
@@ -199,18 +197,18 @@ public class FourInARow {
 			return bestScore;
 		}else {
 			int bestScore = Integer.MAX_VALUE;
-			for(int i =0; i< avilabelPlaces.length; i++)
+			for(int i =0; i< avaliablePlaces.length; i++)
 			{
-				if(board[avilabelPlaces[i]][i] == null)
+				if(board[avaliablePlaces[i]][i] == null)
 				{
 					if(turn)
-						board[avilabelPlaces[i]][i] = new Point("b");
+						board[avaliablePlaces[i]][i] = new Point("b");
 					else
-						board[avilabelPlaces[i]][i] = new Point("r");
-					if(avilabelPlaces[i] != 0) avilabelPlaces[i]--;
+						board[avaliablePlaces[i]][i] = new Point("r");
+					if(avaliablePlaces[i] != 0) avaliablePlaces[i]--;
 					int score = miniMax(depth-1 , true, alpha, beta, (!turn));
-					if(avilabelPlaces[i] != 0 || board[avilabelPlaces[i]][i] == null) avilabelPlaces[i]++;
-					board[avilabelPlaces[i]][i] = null;
+					if(avaliablePlaces[i] != 0 || board[avaliablePlaces[i]][i] == null) avaliablePlaces[i]++;
+					board[avaliablePlaces[i]][i] = null;
 					bestScore = Math.min(score, bestScore);
 					beta =Math.min(beta, score);
 					if(beta <= alpha)
@@ -232,8 +230,8 @@ public class FourInARow {
 			}
 			System.out.println();
 		}
-		for (int i = 0; i < avilabelPlaces.length; i++) {
-			System.out.print(avilabelPlaces[i] + "  ");
+		for (int i = 0; i < avaliablePlaces.length; i++) {
+			System.out.print(avaliablePlaces[i] + "  ");
 		}
 		
 	}
@@ -242,22 +240,20 @@ public class FourInARow {
 		{
 		case 1: // 4 in a row
 			for(Integer l = 1; l<= 4; l++)
-				FourInARowGrafic.buttons[i][j++].setText(l.toString());
+				FourInARowGraphic.buttons[i][j++].setText(l.toString());
 			break;
 		case 2:// 4 in a col
 			for(Integer l = 1; l<= 4; l++)
-				FourInARowGrafic.buttons[i++][j].setText(l.toString());
+				FourInARowGraphic.buttons[i++][j].setText(l.toString());
 			break;
 		case 3: // 4 in a cross1
 			for(Integer l = 1; l<= 4; l++)
-				FourInARowGrafic.buttons[i--][j++].setText(l.toString());
+				FourInARowGraphic.buttons[i--][j++].setText(l.toString());
 			break;
 		case 4:// 4 in a cross2
 			for(Integer l = 1; l<= 4; l++)
-				FourInARowGrafic.buttons[i--][j--].setText(l.toString());
+				FourInARowGraphic.buttons[i--][j--].setText(l.toString());
 			break;
 		}
-	}
-
-	
+	}	
 }
